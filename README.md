@@ -54,33 +54,17 @@
 ### 2.1 현재 ASG의 launch 속도 확인 
 /script/activities_check.sh 를 실행합니다. 
 ```bash
- ~/Documents/git/ec2_auto_scaling_warm_pools/scripts/ [master] sh ./activities_check.sh CodeDeploy_MZ-TRAINING-WEB_SERVER-DEPLOY-ASG_d-UGZII4V6A
+ ~/Documents/git/ec2_auto_scaling_warm_pools/scripts/ [master] sh ./scripts/activities_check.sh CodeDeploy_MZ-TRAINING-WEB_SERVER-DEPLOY-ASG_d-UGZII4V6A
 Launching a new EC2 instance: i-05b12beb88e43320d Duration: 130s
 Launching a new EC2 instance: i-0bccd02583599605a Duration: 130s
 Launching a new EC2 instance: i-01576a0f2779fd4c8 Duration: 160s
-Terminating EC2 instance: i-074bda12617aa6e68 Duration: 130s
-Terminating EC2 instance: i-0deb04910a5f0e38f Duration: 98s
-Terminating EC2 instance: i-0572f006b2a8c5f0b Duration: 119s
-Terminating EC2 instance: i-0e6664a983435d7a8 Duration: 123s
-Terminating EC2 instance: i-0a8c0a0fe18b7c7c1 Duration: 144s
-Terminating EC2 instance: i-00fc0d0d1a9d254ed Duration: 116s
 Launching a new EC2 instance: i-074bda12617aa6e68 Duration: 129s
 Launching a new EC2 instance: i-0deb04910a5f0e38f Duration: 155s
 Launching a new EC2 instance: i-0e6664a983435d7a8 Duration: 154s
 Launching a new EC2 instance: i-00fc0d0d1a9d254ed Duration: 124s
 Launching a new EC2 instance: i-0a8c0a0fe18b7c7c1 Duration: 131s
 Launching a new EC2 instance: i-0572f006b2a8c5f0b Duration: 161s
-Terminating EC2 instance: i-0e34e314b86d47276 Duration: 364s
-Terminating EC2 instance: i-0f44c5fb44f51a067 Duration: 421s
-Updating load balancers/target groups: Successful. Status Reason: Added: arn:aws:elasticloadbalancing:ap-northeast-2:239234376445:targetgroup/MZ-TRAINING-WEB-SERVER-8080-TG/9a88698c0fccbcf7 (Target Group). Duration: 0s
-Updating load balancers/target groups: Successful. Status Reason: Removed: arn:aws:elasticloadbalancing:ap-northeast-2:239234376445:targetgroup/MZ-TRAINING-WEB-SERVER-8080-TG/9a88698c0fccbcf7 (Target Group). Duration: 1s
-Launching a new EC2 instance: i-0e34e314b86d47276 Duration: 257s
-Launching a new EC2 instance: i-0f44c5fb44f51a067 Duration: 1630s
-Terminating EC2 instance: i-0c85f9fb3edc8e4fd Duration: 449s
-Launching a new EC2 instance: i-0c85f9fb3edc8e4fd Duration: 126s
-Terminating EC2 instance: i-0a479c5213d587a1c Duration: 146s
-Updating load balancers/target groups: Successful. Status Reason: Added: arn:aws:elasticloadbalancing:ap-northeast-2:239234376445:targetgroup/MZ-TRAINING-WEB-SERVER-8080-TG/9a88698c0fccbcf7 (Target Group). Duration: 1s
-Launching a new EC2 instance: i-0a479c5213d587a1c Duration: 31s
+......
 ```
 
 현재 ASG의 activity 로그를 가지고 와서 시간을 소요된 시간을 보여 줍니다. 
@@ -113,14 +97,7 @@ aws autoscaling describe-warm-pool \
 |+-------------------------------------------------+-------------------+-----------------------+|
 ```
 
-만약 처음 세팅한 ASG의 경우에는 desired 값만 변경
-```bash
-aws autoscaling set-desired-capacity \
-  --auto-scaling-group-name CodeDeploy_MZ-TRAINING-WEB_SERVER-DEPLOY-ASG_d-UGZII4V6A \
-  --desired-capacity 5
-```
-
-기존에 실행 중인 인스턴스가 있는 ASG의 경우에는 업데이트로 변경 
+ASG의 max size 값과 desired를 변경합니다.
 ```bash
 aws autoscaling update-auto-scaling-group \
   --auto-scaling-group-name CodeDeploy_MZ-TRAINING-WEB_SERVER-DEPLOY-ASG_d-UGZII4V6A \
@@ -137,6 +114,16 @@ aws autoscaling update-auto-scaling-group \
 --pool-state 매개변수를 `Running`으로 지정하여 수명주기가 완료된 후 인스턴스 상태를 시작 상태로 지정할 수도 있습니다.
 
 API 참고 https://awscli.amazonaws.com/v2/documentation/api/latest/reference/autoscaling/put-warm-pool.html
+
+ASG 변경 후 launcching 재확인 
+```bash
+ ~/Documents/git/ec2_auto_scaling_warm_pools/ [master*] sh ./scripts/activities_check.sh CodeDeploy_MZ-TRAINING-WEB_SERVER-DEPLOY-ASG_d-J2J307R9A
+Launching a new EC2 instance from warm pool: i-04b60b6d4c60e9bd1 Duration: 126s
+Launching a new EC2 instance from warm pool: i-02cd17757f97f1206 Duration: 96s
+Launching a new EC2 instance from warm pool: i-0fe674a2c2e8dd771 Duration: 95s
+Launching a new EC2 instance from warm pool: i-04e13b936687c3632 Duration: 72s
+Launching a new EC2 instance from warm pool: i-0ad85c4d050aba286 Duration: 69s
+```
 
 삭제 
 ```bash
@@ -168,7 +155,7 @@ http://docs.amazonaws.cn/autoscaling/ec2/APIReference/API_PutWarmPool.html
 ### 2.3 Warm-pool의 수명주기 중 실행 과정에서 LB에 attach 함
 ![image description](images/tg_instances.png)
 웜풀을 재지정하는 과정에서 TG에 Unhealthy hosts와 Healthy hosts 메트릭이 변경됨. 
-이는 웜풀의 수명주기 때문에.. 
+이는 ASG의 Health check grace period 설정이 EC2 내의 서비스가 올라오기 전 검사를 하기 때문으로 Health check grace period을 적절한 값으로 늘려주어야 합니다. 
 
 ### 2.3 warm-pool을 running으로 설정할 경우 ASG에 적용 받지 않는 서비스 인스턴스가 생성이 됨
 ```bash
@@ -184,6 +171,15 @@ i-071282c646a383328 인스턴스는 warm-running으로 구동 중
 ![image description](images/warm-running2.png)
 
 즉, ASG의 Desired capacity와 TG의 Instnaces가 miss match됨 
+
+
+### 2.4 warm-pool이 적용된 상태로 CodeDeploy를 통한 배포를 실행하면 이후 ASG도 동일한 warm-pool 설정을 상속 받음
+
+### 2.5 warm-pool에 의해 stopped된 인스턴스를 수동으로 상태 변경(예, running)할 경우 설정이 꼬이게 됩니다. 
+또한 ASG에 의해 hook을 걸지 않으므로 CodeDeploy로 배포한 최신 소스코드를 내려 받지 않아 과거의 소스코드로 서비스할 수 있습니다. 
+이 부분은 주의 하셔야 합니다.
+
+
 
 # **Agenda**
 ### 1. Headings 로 제목/주제 입력하기 !
