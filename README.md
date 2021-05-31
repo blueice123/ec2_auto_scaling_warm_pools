@@ -25,12 +25,12 @@ Amazon EC2 Auto Scaling  웜 풀은 애플리케이션 인스턴스를 사전 �
 기존 warm pool이 적용되지 않은 Auto scale의 수명주기는 아래와 같습니다.
 
 
-![image description](images/auto_scaling_lifecycle.png)
+![image description](./images/auto_scaling_lifecycle.png)
 
 만약 warm pool이 적용되어 있다면, 아래와 같이 수명주기 다이어그램에 변경됩니다. 
 
 
-![image description](images/warm-pools-lifecycle-diagram2.png)
+![image description](./images/warm-pools-lifecycle-diagram2.png)
 
 보시는 바와 같이 Auto Scaling group에 warm pool이 추가되는 것을 알 수 있습니다.
 AutoScaling은 인스턴스의 추가가 발생할 떄 warm pool에서 stopped된 인스턴스 혹은 running되고 있는 인스턴스를 ASG InService로 상태 전환하는 것을 알 수 있습니다. 
@@ -83,13 +83,13 @@ aws autoscaling put-warm-pool \
   - [주의] ASG의 `Health check grace period` 값에 충분한 값이 없다면, 상태 검증이 안된 웜풀 인스턴스들이 LoadBalancer에 InService 될 수도 있으니 주의합니다. 
 
 
-![image description](images/min5.png)
+![image description](./images/min5.png)
 
 
 이때 ASG의 상태를 보면 warm pool은 ASG에서 관리하는 대상이 아니므로 instances의 갯수는 그대로 1대를 유지하게 됩니다. 
 
 
-![image description](images/instances1.png)
+![image description](./images/instances1.png)
 
 
 만약 Warm pool의 상태를 확인하고 싶으시다면 아래와 같은 명령을 수행합니다. 
@@ -123,7 +123,7 @@ aws autoscaling update-auto-scaling-group \
 
 warm pool에 속한 5대의 인스턴스가 ASG에 InService되기 위해 running 상태로 변경되고, 
 웜풀이 비어있으므로, 다시 채우기 위해 새로운 5대 인스턴스가 running -> stoped로 상태 변경 됩니다. 
-![image description](images/new+provisioning_instances.png)
+![image description](./images/new+provisioning_instances.png)
 
 
 ASG 변경 후 launcching 재확인 
@@ -165,13 +165,13 @@ An error occurred (ValidationError) when calling the PutWarmPool operation: You 
 ```
 
 
-![image description](images/mixed_instances.png)
+![image description](./images/mixed_instances.png)
 
 
 ### 2.3 Warm-pool의 수명주기 중 실행 과정에서 LB에 attach 합니다.
 
 
-![image description](images/tg_instances.png)
+![image description](./images/tg_instances.png)
 
 
 웜풀을 재지정하는 과정에서 TG에 Unhealthy hosts와 Healthy hosts 메트릭이 변경됩니다. 
@@ -192,13 +192,13 @@ i-071282c646a383328     Warmed:Running
 하지만, LB의 Target group에 인스턴스가 들어가 있어서 실제로는 서비스 중이며, 
 
 
-![image description](images/warm-running.png)
+![image description](./images/warm-running.png)
 
 
 하지만, ASG에는 warm-running 인스턴스는 관리되고 있지 않습니다. 
 
 
-![image description](images/warm-running2.png)
+![image description](./images/warm-running2.png)
 
 즉, ASG의 Desired capacity와 TG의 Instnaces 갯수가 가 miss match 됩니다. 
 
