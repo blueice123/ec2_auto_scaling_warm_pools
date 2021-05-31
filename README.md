@@ -17,7 +17,7 @@
 <br>
 
 
-# 01. Ec2 Auto Scaling warm pool이란?
+## 01. Ec2 Auto Scaling warm pool이란?
 Amazon EC2 Auto Scaling  웜 풀은 애플리케이션 인스턴스를 사전 초기화하여 애플리케이션을 더 빠르게 확장하고 지속적으로 실행되는 인스턴스 수를 줄여 비용을 절감 할 수 있도록 지원합니다. 
 
 웜 풀을 통해 고객은 애플리케이션 트래픽을 신속하게 처리 할 준비가 된 사전 초기화 된 EC2 인스턴스 풀을 생성하여 애플리케이션의 탄력성을 개선 할 수 있습니다.
@@ -35,7 +35,7 @@ Amazon EC2 Auto Scaling  웜 풀은 애플리케이션 인스턴스를 사전 �
 보시는 바와 같이 Auto Scaling group에 warm pool이 추가되는 것을 알 수 있습니다.
 AutoScaling은 인스턴스의 추가가 발생할 떄 warm pool에서 stopped된 인스턴스 혹은 running되고 있는 인스턴스를 ASG InService로 상태 전환하는 것을 알 수 있습니다. 
 
-# 02. 실습
+## 02. 실습
 ### 2.1 현재 ASG의 launch 속도 확인 
 먼저 기존의 ASG의 신규 인스턴스가 `Launch` 상태부터 `InService` 상태까지 어느정도 시간이 걸리는지 측정을 해보겠씁니다.
 이를 위해 `./script/activities_check.sh` 를 실행합니다. 
@@ -150,7 +150,7 @@ aws autoscaling delete-warm-pool --auto-scaling-group-name AutoSclae_Name --forc
 ```
 
 
-# 03. 주의 및 제한사항
+## 03. 주의 및 제한사항
 ### 2.1 Console에서의 설정 지원이 안되며, CLI로만 가능합니다.
 아직까지는 콘솔에서 warm pool을 제어하실 수는 없으며, CLI, CDK를 통해서만 지원됩니다. 
 그리고, 한번 지정해두면 CodeDeploy를 통해 ASG가 복제되는 상황에서도 설정이 유지되므로 배포 과정에서 매번 설정할 필요는 없습니다. 
@@ -203,5 +203,5 @@ i-071282c646a383328     Warmed:Running
 즉, ASG의 Desired capacity와 TG의 Instnaces 갯수가 가 miss match 됩니다. 
 
 
-### 2.4 warm-pool이 적용된 상태로 CodeDeploy를 통한 배포를 실행하면 이후 ASG도 동일한 warm-pool 설정을 상속 받음
+### 2.4 warm-pool이 적용된 상태로 CodeDeploy를 통한 배포를 실행하면 이후 ASG도 동일한 warm-pool 설정을 상속 받습니다.
 CodeDeploy를 배포하는 환경에서도 이전의 ASG 속성을 상속 받으므로 문제되지 않습니다. 
