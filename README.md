@@ -27,10 +27,12 @@ Amazon EC2 Auto Scaling  웜 풀은 애플리케이션 인스턴스를 사전 �
 
 ![image description](./images/auto_scaling_lifecycle.png)
 
+
 만약 warm pool이 적용되어 있다면, 아래와 같이 수명주기 다이어그램에 변경됩니다. 
 
 
 ![image description](./images/warm-pools-lifecycle-diagram2.png)
+
 
 보시는 바와 같이 Auto Scaling group에 warm pool이 추가되는 것을 알 수 있습니다.
 AutoScaling은 인스턴스의 추가가 발생할 떄 warm pool에서 stopped된 인스턴스 혹은 running되고 있는 인스턴스를 ASG InService로 상태 전환하는 것을 알 수 있습니다. 
@@ -126,7 +128,7 @@ warm pool에 속한 5대의 인스턴스가 ASG에 InService되기 위해 runnin
 ![image description](./images/new+provisioning_instances.png)
 
 
-ASG 변경 후 launcching 재확인 
+ASG 변경 후 launcching 재 확인합니다.
 ```bash
  ~/Documents/git/ec2_auto_scaling_warm_pools/ [master*] sh ./scripts/activities_check.sh CodeDeploy_MZ-TRAINING-WEB_SERVER-DEPLOY-ASG_d-J2J307R9A
 Launching a new EC2 instance from warm pool: i-04b60b6d4c60e9bd1 Duration: 126s
