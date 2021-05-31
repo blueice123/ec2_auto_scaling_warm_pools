@@ -23,6 +23,8 @@ Amazon EC2 Auto Scaling  웜 풀은 애플리케이션 인스턴스를 사전 �
 웜 풀을 통해 고객은 애플리케이션 트래픽을 신속하게 처리 할 준비가 된 사전 초기화 된 EC2 인스턴스 풀을 생성하여 애플리케이션의 탄력성을 개선 할 수 있습니다.
 
 기존 warm pool이 적용되지 않은 Auto scale의 수명주기는 아래와 같습니다.
+
+
 ![image description](./images/auto_scaling_lifecycle.png)
 
 
