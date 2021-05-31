@@ -24,12 +24,10 @@ Amazon EC2 Auto Scaling  웜 풀은 애플리케이션 인스턴스를 사전 �
 
 기존 warm pool이 적용되지 않은 Auto scale의 수명주기는 아래와 같습니다.
 
-
-![image description](./images/auto_scaling_lifecycle.png?raw=true)
+![image description](Images/auto_scaling_lifecycle.png)
 
 
 만약 warm pool이 적용되어 있다면, 아래와 같이 수명주기 다이어그램에 변경됩니다. 
-
 
 ![image description](./images/warm-pools-lifecycle-diagram2.png)
 
