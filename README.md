@@ -151,12 +151,12 @@ aws autoscaling delete-warm-pool --auto-scaling-group-name AutoSclae_Name --forc
 
 
 ## 03. 주의 및 제한사항
-### 2.1 Console에서의 설정 지원이 안되며, CLI로만 가능합니다.
+### 3.1 Console에서의 설정 지원이 안되며, CLI로만 가능합니다.
 아직까지는 콘솔에서 warm pool을 제어하실 수는 없으며, CLI, CDK를 통해서만 지원됩니다. 
 그리고, 한번 지정해두면 CodeDeploy를 통해 ASG가 복제되는 상황에서도 설정이 유지되므로 배포 과정에서 매번 설정할 필요는 없습니다. 
 
 
-### 2.2 ASG에 Spot과 On-demand가 혼합되어 있는 경우 웜풀을 지원하지 않습니다. 
+### 3.2 ASG에 Spot과 On-demand가 혼합되어 있는 경우 웜풀을 지원하지 않습니다. 
 ASG에 Spot와 On-demand가 혼합되어 있는 경우 웜풀을 지원하지 않습니다. 
 물론 Spot으로만 Launch template이 설정되어 있다면 이 또한 지원하지 않습니다. 
 
@@ -168,7 +168,7 @@ An error occurred (ValidationError) when calling the PutWarmPool operation: You 
 ![image description](./Images/mixed_instances.png)
 
 
-### 2.3 Warm-pool의 수명주기 중 실행 과정에서 LB에 attach 합니다.
+### 3.3 Warm-pool의 수명주기 중 실행 과정에서 LB에 attach 합니다.
 
 
 ![image description](./Images/tg_instances.png)
@@ -178,7 +178,7 @@ An error occurred (ValidationError) when calling the PutWarmPool operation: You 
 이는 ASG의 Health check grace period 설정이 EC2 내의 서비스가 올라오기 전 검사를 하기 때문으로 Health check grace period을 적절한 값으로 늘려주어야 합니다. 
 
 
-### 2.3 Warm-pool을 running으로 설정할 경우 ASG에 적용 받지 않는 서비스 인스턴스가 생성이 됩니다.
+### 3.3 Warm-pool을 running으로 설정할 경우 ASG에 적용 받지 않는 서비스 인스턴스가 생성이 됩니다.
 Warm pool은 기본적으로 ASG에 적용 받지 않습니다. 
 만약 웜풀의 `--state running`으로 설정하였을 경우 ASG에 적용 받지 않은 인스턴스가 생성이 되어 LoadBalancer에 Attach 됩니다. 
 
@@ -203,7 +203,7 @@ i-071282c646a383328     Warmed:Running
 즉, ASG의 Desired capacity와 TG의 Instnaces 갯수가 가 miss match 됩니다. 
 
 
-### 2.4 warm-pool이 적용된 상태로 CodeDeploy를 통한 배포를 실행하면 이후 ASG도 동일한 warm-pool 설정을 상속 받습니다.
+### 3.4 warm-pool이 적용된 상태로 CodeDeploy를 통한 배포를 실행하면 이후 ASG도 동일한 warm-pool 설정을 상속 받습니다.
 CodeDeploy를 배포하는 환경에서도 이전의 ASG 속성을 상속 받으므로 문제되지 않습니다. 
 
 
