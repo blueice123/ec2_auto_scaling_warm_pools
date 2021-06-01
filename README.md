@@ -68,8 +68,8 @@ aws autoscaling put-warm-pool \
 ```
   - `--pool-state` 매개변수를 `Running`으로 지정하여 인스턴스를 시작상태로 웜풀에 대기시킬 수도 있습니다. 다만 이 경우 비용상의 이점이 없어지며, ASG에서 관리되지 않는 웜풀 내의 인스턴스가 로드밸런서에 서비스에 InService되므로 개인적으로 사용하지 않는것을 권해 드립니다. 
   - 위의 명령어와 같이 `--max-group-prepared-capacity` 옵션을 지정하지 않으면 ASG의 MAX-Desired capcity 값이 자동으로 정의됩니다. 
-  - 즉, ASG에 MIN값 1, MAX값 5, Desired값이 1일 때 warm pool의 수량은 MAX-Desired이므로 4가 됩니다.
-  - 이렇게 설정을하면 ASG의 MAX 값이 변경될 때마다 동적으로 변경됩니다.
+    - 즉, ASG에 MIN값 1, MAX값 5, Desired값이 1일 때 warm pool의 수량은 MAX-Desired이므로 4가 됩니다.
+    - 이렇게 설정을하면 ASG의 MAX 값이 변경될 때마다 동적으로 변경됩니다.
   - 만약 위 명령과 같이 동적으로 warm pool의 크기를 지정하지 않고, 수치를 딱 정하고 싶을 때에는 아래와 같이 `--max-group-prepared-capacity` `--min-size` 옵션을 부여 합니다.  
 
 
